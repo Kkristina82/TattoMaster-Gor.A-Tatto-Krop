@@ -1,4 +1,4 @@
-const totalPhotos = 20; 
+const totalPhotos = 18; 
 
 function loadPhotos() {
     const grid = document.getElementById('photo-grid');
