@@ -6,7 +6,13 @@
     --neon-red: #cf0000;
 }
 
-body { background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; }
+body { 
+    background: var(--bg); 
+    color: #fff; 
+    font-family: 'Montserrat', sans-serif; 
+    margin: 0; 
+    overflow-x: hidden; 
+}
 
 /* NAV */
 .main-nav { 
@@ -27,7 +33,7 @@ body { background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif
 .tab-content { display: none; padding: 120px 20px; min-height: 100vh; }
 .tab-content.active { display: block; }
 
-/* HERO & PROMO */
+/* HERO */
 .hero { height: 30vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 .neon-title {
     font-family: 'Oswald', sans-serif; font-size: clamp(2rem, 8vw, 5rem);
@@ -38,153 +44,32 @@ body { background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif
 .about-section { text-align: center; margin-bottom: 60px; }
 .promo-img { width: 100%; max-width: 500px; border: 1px solid #222; transition: 0.5s; }
 .promo-img:hover { border-color: var(--neon-pink); box-shadow: 0 0 20px var(--neon-pink); }
-.scroll-indicator { margin-top: 20px; color: #444; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
 
 /* GALLERY */
 .reveal-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
 .reveal-item { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
 .reveal-item.visible { opacity: 1; transform: translateY(0); }
-.reveal-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: grayscale(1); border: 1px solid #222; transition: 0.5s; }
+.reveal-item img { width: 100%; aspect-ratio: 1/1; object-fit: cover; filter: grayscale(1); border: 1px solid #222; transition: 0.5s; cursor: zoom-in; }
 .reveal-item:hover img { filter: grayscale(0); border-color: var(--neon-pink); }
 
-/* MORE BUTTON */
-.more-works-container { text-align: center; padding: 60px 0; }
-.btn-more {
-    background: transparent; border: 2px solid var(--neon-pink); color: #fff; 
-    padding: 18px 35px; font-family: 'Oswald', sans-serif; font-size: 1.1rem; 
-    letter-spacing: 2px; text-decoration: none; transition: 0.4s; box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+/* CONTACT BUTTONS */
+.contact-container { max-width: 400px; margin: 0 auto; }
+.contact-grid { display: flex; flex-direction: column; gap: 15px; }
+.btn-contact {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    padding: 18px; border: 1px solid var(--neon-pink); color: #fff;
+    text-decoration: none; font-family: 'Oswald', sans-serif; font-size: 1.1rem;
+    letter-spacing: 2px; transition: 0.4s; background: rgba(255, 255, 255, 0.05);
 }
-.btn-more:hover { background: var(--neon-pink); color: #000; box-shadow: 0 0 30px var(--neon-pink); transform: scale(1.05); }
-
-/* INFO POSTERS - Додаємо ефекти при наведенні */
-.info-posters img, .course-card img {
-    width: 100%;
-    border: 1px solid #222;
-    cursor: zoom-in;
-    transition: all 0.4s ease; /* Плавний перехід для всіх властивостей */
-}
-
-.info-posters img:hover, .course-card img:hover {
-    border-color: var(--neon-pink); /* Зміна кольору рамки на рожевий */
-    box-shadow: 0 0 20px var(--neon-pink); /* Неонове світіння */
-    transform: scale(1.02); /* Легке збільшення */
-    z-index: 10; /* Щоб картка була візуально над іншими */
-}
-.section-title { text-align: center; font-family: 'Oswald', sans-serif; font-size: 2.5rem; letter-spacing: 5px; margin-bottom: 50px; }
-.info-posters { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-.info-posters img { width: 100%; border: 1px solid #222; cursor: zoom-in; transition: 0.3s; }
-
-.course-card { display: flex; flex-direction: column; gap: 15px; }
-.btn-course { 
-    background: transparent; border: 1px solid var(--neon-pink); color: var(--neon-pink); 
-    padding: 12px; font-family: 'Oswald', sans-serif; cursor: pointer; transition: 0.3s; letter-spacing: 1px;
-}
-.btn-course:hover { background: var(--neon-pink); color: #000; box-shadow: 0 0 15px var(--neon-pink); }
-
-/* CARE GUIDE */
-.care-guide-v2 { max-width: 700px; margin: 0 auto; background: #050505; padding: 40px; border: 1px solid #1a1a1a; text-align: center; line-height: 1.6; }
-.guide-main-title { color: var(--neon-pink); font-family: 'Oswald', sans-serif; margin-bottom: 40px; }
-.care-block h4 { color: var(--neon-red); font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; }
-.care-block p { color: #ccc; margin: 5px 0; }
-.care-divider { color: #222; margin: 25px 0; font-size: 1.2rem; }
-.final-rule { margin-top: 40px; padding: 25px; border: 1px solid var(--neon-pink); background: rgba(255, 0, 255, 0.02); }
-
-/* CONTACTS */
-.contact-info { text-align: center; }
-.btn { 
-    display: inline-block; padding: 15px 40px; border: 2px solid #fff; color: #fff; 
-    text-decoration: none; font-family: 'Oswald', sans-serif; box-shadow: 0 0 15px var(--neon-pink); transition: 0.3s;
-}
-.btn:hover { background: #fff; color: #000; }
+.btn-contact:hover { background: var(--neon-pink); color: #000; box-shadow: 0 0 25px var(--neon-pink); transform: translateY(-3px); }
 
 /* MODAL */
-.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; cursor: zoom-out; }
+.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; }
 .modal-content { max-width: 90%; max-height: 90%; border: 1px solid var(--neon-pink); }
 .close-modal { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; }
 
 @media (max-width: 600px) {
     .main-nav { padding: 10px; flex-direction: column; }
-    .main-nav ul { gap: 2px; }
+    .main-nav ul { gap: 2px; margin-top: 10px; }
     .main-nav li { font-size: 0.55rem; padding: 6px 8px; }
-}
-/* CONTACTS - Нові стилі */
-.contact-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.contact-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Відступ між кнопками */
-}
-
-.btn-contact {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 18px;
-    border: 1px solid var(--neon-pink);
-    color: #fff;
-    text-decoration: none;
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-    transition: 0.4s;
-    background: rgba(255, 0, 255, 0.05);
-}
-
-.btn-contact i {
-    font-size: 1.3rem;
-    width: 25px;
-    text-align: center;
-}
-
-.btn-contact:hover {
-    background: var(--neon-pink);
-    color: #000;
-    box-shadow: 0 0 25px var(--neon-pink);
-    transform: translateY(-3px);
-}
-
-/* Окремий стиль для кнопки телефону, щоб вона виділялася */
-.btn-phone {
-    border-color: #fff;
-    background: transparent;
-    margin-top: 10px;
-}
-
-.btn-phone:hover {
-    background: #fff;
-    box-shadow: 0 0 25px #fff;
-    color: #000;
-}
-/* Стиль для обгортки кнопки та підпису */
-.map-button-wrapper {
-    text-align: center;
-    margin-top: 10px;
-}
-
-/* Спеціальний колір для кнопки карт (червоний акцент, як у вашому лого) */
-.btn-maps {
-    border-color: var(--neon-red);
-    background: rgba(207, 0, 0, 0.05);
-}
-
-.btn-maps:hover {
-    background: var(--neon-red);
-    box-shadow: 0 0 25px var(--neon-red);
-    color: #fff;
-}
-
-/* Стиль підпису під кнопкою */
-.map-hint {
-    color: #888;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 8px;
-    font-family: 'Montserrat', sans-serif;
 }
