@@ -1,4 +1,4 @@
-const totalPhotos = 20; // Кількість ваших фото в папці img/
+const totalPhotos = 20; 
 
 function loadPhotos() {
     const grid = document.getElementById('photo-grid');
@@ -10,7 +10,6 @@ function loadPhotos() {
         const img = document.createElement('img');
         img.src = `img/${i}.jpg`; 
         img.onerror = function() { item.remove(); };
-        img.onclick = function() { openModal(this.src); };
         item.appendChild(img);
         grid.appendChild(item);
     }
@@ -19,7 +18,8 @@ function loadPhotos() {
 function showTab(tabId) {
     const tabs = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => tab.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
+    const activeTab = document.getElementById(tabId);
+    if (activeTab) activeTab.classList.add('active');
     window.scrollTo(0, 0);
     setTimeout(checkReveal, 100);
 }
@@ -32,21 +32,24 @@ function checkReveal() {
     });
 }
 
-function openModal(src) {
+function initLightbox() {
     const modal = document.getElementById('image-modal');
     const modalImg = document.getElementById('full-image');
-    modal.style.display = "flex";
-    modalImg.src = src;
+    
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.info-posters img') || e.target.closest('.course-card img') || e.target.closest('.reveal-item img')) {
+            modal.style.display = "flex";
+            modalImg.src = e.target.src;
+        }
+    });
+
+    modal.onclick = function() { modal.style.display = "none"; };
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPhotos();
     checkReveal();
-    
-    const modal = document.getElementById('image-modal');
-    if(modal) {
-        modal.onclick = () => modal.style.display = "none";
-    }
+    initLightbox();
 });
 
 window.addEventListener('scroll', checkReveal);
