@@ -1,30 +1,106 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Oswald:wght@500;700&display=swap');
-
+/* --- ОСНОВНІ НАЛАШТУВАННЯ --- */
 :root {
-    --bg: #000;
+    --bg-color: #050505;
+    --text-color: #ffffff;
     --neon-pink: #ff00ff;
-    --neon-red: #cf0000;
+    --neon-red: #ff0044;
+    --grey-text: #aaaaaa;
+    --dark-grey: #111111;
+    --border-color: #2a2a2a;
+    --font-main: 'Montserrat', sans-serif;
 }
 
-body { background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; margin: 0; overflow-x: hidden; }
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 
-.main-nav { 
-    position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; 
-    padding: 15px 40px; background: rgba(0,0,0,0.95); z-index: 1000; border-bottom: 1px solid #222;
-    box-sizing: border-box; align-items: center;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
-.logo { font-family: 'Oswald', sans-serif; letter-spacing: 3px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-.logo i { color: var(--neon-red); }
-.main-nav ul { display: flex; list-style: none; gap: 5px; margin: 0; padding: 0; }
-.main-nav li { 
-    font-size: 0.65rem; cursor: pointer; text-transform: uppercase; padding: 8px 12px; 
-    border: 1px solid transparent; transition: 0.3s; border-radius: 4px; letter-spacing: 1px;
-}
-.main-nav li:hover { border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); }
 
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* --- НАВІГАЦІЯ --- */
+.main-nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #222;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-shadow: 0 0 10px var(--neon-pink);
+}
+
+.main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 15px;
+}
+
+.about-container {
+    display: flex;
+    justify-content: center; /* Центрує горизонтально */
+    align-items: center;     /* Центрує вертикально */
+    width: 100%;             /* Контейнер займає всю ширину */
+    padding: 20px 0;         /* Невеликий відступ зверху і знизу, щоб не липло до країв */
+}
+
+.promo-img {
+    display: block;          /* Прибирає зайві мікровідступи знизу */
+    max-width: 100%;         /* Захист: якщо раптом екран буде меншим за фото, воно стиснеться */
+    height: auto;            /* Зберігає пропорції при стисненні */
+}
+
+.main-nav li {
+    font-size: 0.75rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: 0.3s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.main-nav li:hover {
+    color: var(--neon-pink);
+    text-shadow: 0 0 8px var(--neon-pink);
+}
+
+/* --- КОНТЕНТ --- */
+.tab-content {
+    display: none;
+    padding: 100px 20px 40px;
+    min-height: 100vh;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 .tab-content { display: none; padding: 120px 20px; min-height: 100vh; }
 .tab-content.active { display: block; }
-
 .hero { height: 30vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 .neon-title {
     font-family: 'Oswald', sans-serif; font-size: clamp(2rem, 8vw, 5rem);
@@ -64,35 +140,262 @@ body { background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif
 }
 .btn-course:hover { background: var(--neon-pink); color: #000; box-shadow: 0 0 15px var(--neon-pink); }
 
-.care-guide-v2 { max-width: 700px; margin: 0 auto; background: #050505; padding: 40px; border: 1px solid #1a1a1a; text-align: center; line-height: 1.6; }
-.guide-main-title { color: var(--neon-pink); font-family: 'Oswald', sans-serif; margin-bottom: 40px; }
-.care-block h4 { color: var(--neon-red); font-size: 1.2rem; margin-bottom: 10px; text-transform: uppercase; }
-.care-block p { color: #ccc; margin: 5px 0; }
-.care-divider { color: #222; margin: 25px 0; font-size: 1.2rem; }
-.final-rule { margin-top: 40px; padding: 25px; border: 1px solid var(--neon-pink); background: rgba(255, 0, 255, 0.02); }
-
-.contact-container { max-width: 400px; margin: 0 auto; padding: 20px; }
-.contact-grid { display: flex; flex-direction: column; gap: 15px; }
-.btn-contact {
-    display: flex; align-items: center; justify-content: center; gap: 12px; padding: 18px; 
-    border: 1px solid var(--neon-pink); color: #fff; text-decoration: none; 
-    font-family: 'Oswald', sans-serif; font-size: 1.1rem; letter-spacing: 2px; transition: 0.4s; background: rgba(255, 0, 255, 0.05);
+/* --- КОНТЕЙНЕР ГІДУ ТА ФОРМИ --- */
+.care-guide-v2 {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 30px;
+    background: #070707;
+    border: 1px solid #1a1a1a;
+    line-height: 1.6;
 }
-.btn-contact:hover { background: var(--neon-pink); color: #000; box-shadow: 0 0 25px var(--neon-pink); transform: translateY(-3px); }
-.btn-phone { border-color: #fff; background: transparent; margin-top: 10px; }
-.btn-phone:hover { background: #fff; box-shadow: 0 0 25px #fff; color: #000; }
 
-.map-button-wrapper { text-align: center; margin-top: 10px; }
-.btn-maps { border-color: var(--neon-red); background: rgba(207, 0, 0, 0.05); }
-.btn-maps:hover { background: var(--neon-red); box-shadow: 0 0 25px var(--neon-red); color: #fff; }
-.map-hint { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; font-family: 'Montserrat', sans-serif; }
+/* --- ФОРМА ЗАПИСУ (ВИПРАВЛЕНА) --- */
+.booking-form-v2 {
+    max-width: 500px;
+    padding: 25px;
+}
 
-.modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; cursor: zoom-out; }
-.modal-content { max-width: 90%; max-height: 90%; border: 1px solid var(--neon-pink); }
-.close-modal { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; cursor: pointer; }
+.care-block {
+    margin-bottom: 20px; /* Нижній відступ між блоками */
+}
 
+.care-block:last-of-type {
+    margin-bottom: 25px;
+}
+
+.input-label {
+    color: var(--neon-pink);
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: block;
+}
+
+.booking-input {
+    width: 100%;
+    background: var(--dark-grey);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    color: white;
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    outline: none;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+
+.booking-input:focus {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 12px rgba(255, 0, 255, 0.15);
+}
+
+/* Текстове поле */
+.idea-textarea {
+    height: 90px;
+    resize: none;
+    line-height: 1.4;
+    padding-top: 12px;
+}
+
+/* Блок фото (НОВИЙ) */
+.file-upload-wrapper {
+    position: relative;
+}
+
+.file-label-btn {
+    display: block;
+    cursor: pointer;
+    text-align: center;
+    border: 1px dashed var(--neon-pink) !important;
+    padding: 15px;
+    background: rgba(255, 0, 255, 0.02);
+    transition: 0.3s;
+}
+
+.file-label-btn i {
+    color: var(--neon-pink);
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+.file-label-btn span {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 1px;
+}
+
+.file-label-btn:hover {
+    background: rgba(255, 0, 255, 0.08);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+}
+
+/* Кнопка відправки */
+.submit-btn {
+    width: 100%;
+    margin-top: 10px;
+    py: 16px;
+}
+
+/* Статус */
+.status-box {
+    display: none;
+    color: #ffcc00;
+    margin-top: 25px;
+    padding: 15px;
+    text-align: center;
+    border: 1px dashed #ffcc00;
+    background: rgba(255, 204, 0, 0.03);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+/* --- КНОПКИ ГЛОБАЛЬНІ --- */
+.btn-course, .btn-contact, .btn-more {
+    display: inline-block;
+    padding: 14px 28px;
+    background: transparent;
+    border: 1px solid var(--neon-pink);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: 0.3s;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.btn-course:hover, .btn-more:hover {
+    background: var(--neon-pink);
+    color: #000;
+    box-shadow: 0 0 20px var(--neon-pink);
+}
+
+/* Плаваюча кнопка */
+.floating-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 999;
+    background: var(--neon-pink);
+    color: #000;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-family: var(--font-main);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    box-shadow: 0 0 25px var(--neon-pink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: pulse 2.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 25px var(--neon-pink); }
+    50% { transform: scale(1.03); box-shadow: 0 0 35px var(--neon-pink); }
+    100% { transform: scale(1); box-shadow: 0 0 25px var(--neon-pink); }
+}
+
+/* --- КОНТАКТИ (Виправлення сітки) --- */
+.contact-container {
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Дві колонки для ПК */
+    gap: 20px;
+}
+
+/* Щоб кнопки розтягувались на всю ширину своєї колонки */
+.contact-grid .btn-contact {
+    display: block;
+    width: 100%;
+}
+
+/* Вирівнювання кнопки карти та підказки */
+.map-button-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.map-hint {
+    font-size: 0.8rem;
+    color: var(--grey-text);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- АДАПТИВНІСТЬ --- */
 @media (max-width: 600px) {
-    .main-nav { padding: 10px; flex-direction: column; }
-    .main-nav ul { gap: 2px; }
-    .main-nav li { font-size: 0.55rem; padding: 6px 8px; }
+    .main-nav { padding: 10px 15px; flex-direction: column; }
+    .main-nav ul { gap: 8px; margin-top: 10px; width: 100%; justify-content: center; }
+    .main-nav li { font-size: 0.6rem; padding: 5px; }
+    .tab-content { padding-top: 120px; }
+    .care-guide-v2 { padding: 20px; }
+    .neon-title { font-size: 1.8rem; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .reveal-gallery { grid-template-columns: 1fr 1fr; }
+    .floating-btn { bottom: 15px; right: 15px; padding: 12px 20px; font-size: 0.75rem; }
+}
+/* М'яка поява картинок у галереї */
+.reveal-item {
+    border-radius: 8px; /* Легке закруглення */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 0, 255, 0.1);
+}
+
+.reveal-item:hover {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+    z-index: 10;
+}
+
+/* Стилізація модального вікна для перегляду фото */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    border: 2px solid var(--neon-pink);
+    box-shadow: 0 0 30px var(--neon-pink);
+}
+
+/* Гарний скроллбар у стилі сайту */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--dark-grey);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-pink);
 }
