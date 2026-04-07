@@ -18,8 +18,8 @@ const totalPhotos = 20;
 let fp; // Екземпляр календаря
 
 // Налаштування Telegram
-const TELEGRAM_BOT_TOKEN = '8758214194:AAFI7drpn1wGVEpEaB9XrNyBoZHg1M7GApE'; 
-const TELEGRAM_CHAT_ID = '7443699603'; 
+const TELEGRAM_BOT_TOKEN ; 
+const TELEGRAM_CHAT_ID ; 
 
 // --- ГАЛЕРЕЯ ---
 function loadPhotos() {
