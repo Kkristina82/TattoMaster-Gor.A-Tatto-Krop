@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель керування | GOR.A</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+</head>
+<body style="background: #050505;">
+
+    <div id="login-screen" style="display: flex; height: 100vh; align-items: center; justify-content: center; flex-direction: column;">
+        <h2 style="color: var(--neon-pink); margin-bottom: 20px;">ВХІД В АДМІНКУ</h2>
+        <input type="password" id="admin-pass" placeholder="Пароль" class="booking-input" style="max-width: 300px; text-align: center;">
+        <button onclick="checkAdminPass()" class="btn-course" style="margin-top: 15px; width: 300px;">УВІЙТИ</button>
+    </div>
+
+    <div id="admin-content" style="display: none; padding: 50px 20px;">
+        <h2 class="section-title" style="color: var(--neon-red);">CONTROL PANEL</h2>
+        <div class="care-guide-v2" style="max-width: 600px; margin: 0 auto; background: rgba(10,10,10,0.9); padding: 20px; border: 1px solid #222;">
+            <h4 style="color: var(--neon-pink); border-bottom: 1px solid #222; padding-bottom: 10px;">СПИСОК ЗАПИСІВ</h4>
+            <div id="admin-bookings-list" style="text-align: left; margin-bottom: 30px; max-height: 400px; overflow-y: auto;"></div>
+            
+            <h4 style="color: var(--neon-red); border-bottom: 1px solid #222; padding-bottom: 10px;">КЕРУВАННЯ ГРАФІКОМ</h4>
+            <input type="date" id="admin-day-off" class="booking-input" style="margin-bottom: 10px;">
+            <button onclick="setDayOff()" class="btn-course" style="width: 100%; border-color: var(--neon-red); color: var(--neon-red);">ЗАБЛОКУВАТИ ДАТУ</button>
+            <h4 style="color: var(--neon-pink); border-bottom: 1px solid #222; padding-bottom: 10px; margin-top: 20px;">ДОДАТИ ЗАПИС ВРУЧНУ</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+    <input type="text" id="manual-name" placeholder="Ім'я клієнта" class="booking-input">
+    <input type="text" id="manual-contact" placeholder="Контакт (інста/номер)" class="booking-input">
+    <input type="text" id="manual-idea" placeholder="Що б'ємо?" class="booking-input">
+    <input type="date" id="manual-date" class="booking-input">
+    <button onclick="addManualBooking()" class="btn-course" style="width: 100%; border-color: var(--neon-pink); color: var(--neon-pink);">ЗАПИСАТИ</button>
+</div>
+            <a href="index.html" class="btn-contact" style="margin-top: 30px; width: 100%; opacity: 0.5; text-decoration: none; display: block;">ПОВЕРНУТИСЬ НА САЙТ</a>
+        </div>
+    </div>
+
+    <script src="admin-script.js"></script>
+</body>
+</html>
