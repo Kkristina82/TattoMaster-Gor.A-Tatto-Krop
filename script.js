@@ -27,48 +27,83 @@ function loadPhotos() {
     const grid = document.getElementById('photo-grid');
     if (!grid) return;
     grid.innerHTML = ''; 
+    
     for (let i = 1; i <= totalPhotos; i++) {
         const item = document.createElement('div');
         item.className = 'reveal-item';
+        
         const img = document.createElement('img');
         img.src = `img/${i}.jpg`; 
         img.alt = `Tattoo work ${i}`;
         img.loading = "lazy";
-        img.onerror = function() { item.remove(); };
-        img.onclick = function() {
+
+        // Якщо фото не знайдено - видаляємо пустий блок
+        img.onerror = function() { 
+            item.remove(); 
+        };
+
+        // Функція збільшення при кліку
+        item.onclick = function() {
             const modal = document.getElementById('image-modal');
             const modalImg = document.getElementById('full-image');
             if (modal && modalImg) {
-                modal.style.display = "flex";
-                modalImg.src = this.src;
+                modal.style.display = "flex"; // Показуємо модалку
+                modalImg.src = img.src;      // Передаємо шлях до великого фото
+                document.body.style.overflow = "hidden"; // Блокуємо прокрутку сайту
             }
         };
+
         item.appendChild(img);
         grid.appendChild(item);
     }
 }
 
+// --- УНІВЕРСАЛЬНА МОДАЛКА ДЛЯ ІНФО-ПОСТЕРІВ ---
+function initUniversalModal() {
+    // Шукаємо всі картинки в секції інформації
+    const infoImages = document.querySelectorAll('#aftercare img');
+    
+    infoImages.forEach(img => {
+        // Щоб не додавати обробник двічі, перевіряємо, чи він уже є
+        if (!img.dataset.modalInit) {
+            img.onclick = function() {
+                const modal = document.getElementById('image-modal');
+                const modalImg = document.getElementById('full-image');
+                if (modal && modalImg) {
+                    modal.style.display = "flex"; // Показуємо модалку
+                    modalImg.src = this.src;      // Передаємо шлях до великого фото
+                    document.body.style.overflow = "hidden"; // Блокуємо прокрутку сайту
+                }
+            };
+            img.dataset.modalInit = "true"; // Позначаємо, що обробник додано
+        }
+    });
+}
+
 // --- НАВІГАЦІЯ ---
+// --- НАВІГАЦІЯ (Оновлена) ---
 window.showTab = function(tabId) {
     try {
         const tabs = document.querySelectorAll('.tab-content');
         tabs.forEach(tab => {
             tab.classList.remove('active');
-            if (tab.id === 'admin-panel') tab.style.display = 'none';
         });
         
         const activeTab = document.getElementById(tabId);
         if (activeTab) {
             activeTab.classList.add('active');
-            if (tabId === 'admin-panel') activeTab.style.display = 'block';
+        }
+
+        // --- ДОДАНО ТУТ ---
+        // Якщо перейшли на інформацію, ініціалізуємо модалку для її фото
+        if (tabId === 'aftercare') {
+            initUniversalModal();
         }
 
         // Викликаємо календар тільки якщо перейшли на вкладку запису
         if (tabId === 'booking') {
             renderCalendar();
         }
-        
-        if (tabId === 'admin-panel') loadAdminData();
         
         window.scrollTo(0, 0);
         if (typeof checkReveal === "function") setTimeout(checkReveal, 100);
@@ -130,142 +165,99 @@ function renderCalendar() {
 }
 
 // --- ОБРОБКА ФОРМИ ЗАПИСУ ---
-document.addEventListener('change', function(e) {
-    if (e.target && e.target.id === 'book-file') {
-        const fileName = e.target.files[0] ? e.target.files[0].name : "ОБРАТИ ФОТО";
-        document.getElementById('file-label').innerText = fileName;
-    }
-});
-
+// --- ОБРОБКА ФОРМИ ЗАПИСУ ---
 document.addEventListener('click', function(e) {
     if (e.target && e.target.id === 'submit-booking') {
         const date = document.getElementById('book-date').value;
-        const name = document.getElementById('book-name').value;
+        const name = document.getElementById('book-name').value.trim();
         const idea = document.getElementById('book-idea').value.trim();
         const contact = document.getElementById('book-contact').value.trim();
         const fileInput = document.getElementById('book-file');
         const status = document.getElementById('booking-status');
+        const btn = e.target;
 
-        // Валідація
+        // 1. Валідація
         if (!date || !name || !contact || !idea) {
             alert("Заповніть всі поля 🖤");
             return;
         }
 
-        const instaRegex = /^@[a-zA-Z0-9._]{2,30}$/;
-        const phoneRegex = /^(\+38)?0\d{9}$/;
-
-        if (!instaRegex.test(contact) && !phoneRegex.test(contact)) {
-            alert("Введіть Instagram (з @) або номер телефону 🖤");
-            return;
-        }
-
+        // 2. Блокування інтерфейсу
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
         status.style.display = "block";
         status.innerText = "Відправка... зачекайте 🖤";
 
-        // Перевірка на зайнятість (подвійна)
-        database.ref('bookings/' + date).once('value').then((snapshot) => {
-            if (snapshot.exists() && (snapshot.val().status === 'confirmed' || snapshot.val().clientName.includes('ВИХІДНИЙ'))) {
-                alert("Ця дата вже остаточно зайнята 🖤");
-                renderCalendar();
-                return;
-            }
+        // 3. Запис у Firebase
+        database.ref('bookings/' + date).set({
+            clientName: name,
+            clientContact: contact,
+            idea: idea,
+            status: "pending",
+            timestamp: Date.now()
+        }).then(() => {
+            const message = `🔔 НОВА ЗАЯВКА\n📅 Дата: ${date}\n👤 Клієнт: ${name}\n📝 Ідея: ${idea}\n📱 Контакт: ${contact}`;
+            
+            // 4. Відправка в Telegram
+            if (fileInput.files && fileInput.files[0]) {
+                // ВІДПРАВКА З ФОТО
+                const formData = new FormData();
+                formData.append('chat_id', TELEGRAM_CHAT_ID);
+                formData.append('photo', fileInput.files[0]);
+                formData.append('caption', message);
 
-            // Запис в базу
-            database.ref('bookings/' + date).set({
-                clientName: name,
-                clientContact: contact,
-                idea: idea,
-                status: "pending",
-                timestamp: Date.now()
-            }).then(() => {
-                const message = `🔔 НОВА ЗАЯВКА\n📅 Дата: ${date}\n👤 Клієнт: ${name}\n📝 Ідея: ${idea}\n📱 Контакт: ${contact}`;
-                
-                if (fileInput.files && fileInput.files[0]) {
-                    const formData = new FormData();
-                    formData.append('chat_id', TELEGRAM_CHAT_ID);
-                    formData.append('photo', fileInput.files[0]);
-                    formData.append('caption', message);
-                    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData }).then(finalize);
-                } else {
-                    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
-                    fetch(url).then(finalize);
-                }
-            });
+                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData // Для FormData заголовок Content-Type НЕ МОЖНА ставити вручну!
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if(!data.ok) throw new Error(data.description);
+                    finalize();
+                })
+                .catch(err => {
+                    console.error("Telegram Error:", err);
+                    alert("Помилка відправки фото. Запис збережено в базі, я побачу його в адмінці.");
+                    finalize();
+                });
+            } else {
+                // ВІДПРАВКА БЕЗ ФОТО
+                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if(!data.ok) throw new Error(data.description);
+                    finalize();
+                })
+                .catch(err => {
+                    console.error("Telegram Error:", err);
+                    finalize();
+                });
+            }
+        }).catch(err => {
+            alert("Помилка бази даних. Спробуйте пізніше.");
+            btn.disabled = false;
+            btn.style.opacity = "1";
         });
 
         function finalize() {
             status.innerHTML = "Успішно! Я напишу вам 🖤";
             document.getElementById('booking-form-container').style.opacity = "0.3";
             document.getElementById('booking-form-container').style.pointerEvents = "none";
-            renderCalendar();
+            if (typeof renderCalendar === "function") renderCalendar();
+            
+            // Авто-перезавантаження через 4 секунди для очищення форми
+            setTimeout(() => { location.reload(); }, 4000);
         }
     }
 });
-
-// --- АДМІН-ПАНЕЛЬ ---
-window.adminAuth = function() {
-    const pass = prompt("Пароль:");
-    if (pass === "0000") {
-        showTab('admin-panel');
-    } else {
-        alert("Відмовлено.");
-    }
-};
-
-function loadAdminData() {
-    const listCont = document.getElementById('admin-bookings-list');
-    database.ref('bookings').on('value', (snapshot) => {
-        const data = snapshot.val();
-        listCont.innerHTML = "";
-        if (!data) return listCont.innerHTML = "<p>Записів немає</p>";
-
-        // Сортування по даті
-        const sortedDates = Object.keys(data).sort();
-
-        sortedDates.forEach(date => {
-            const isConfirmed = data[date].status === "confirmed" || data[date].clientName.includes("ВИХІДНИЙ");
-            const item = document.createElement('div');
-            item.style.cssText = "padding: 15px; border-bottom: 1px solid #222; margin-bottom: 10px; background: " + (isConfirmed ? "rgba(255,255,255,0.02)" : "rgba(255, 204, 0, 0.05)");
-            
-            item.innerHTML = `
-                <div style="margin-bottom: 10px;">
-                    <strong style="color: ${isConfirmed ? 'var(--neon-pink)' : '#ffcc00'}">${date} [${isConfirmed ? 'OK' : 'ОЧІКУЄ'}]</strong><br>
-                    <small>${data[date].clientName} (${data[date].clientContact})</small>
-                    <p style="font-size: 0.8rem; color: #aaa; margin: 5px 0;">${data[date].idea || ''}</p>
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    ${!isConfirmed ? `<button onclick="confirmBooking('${date}')" style="background: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer;">ПІДТВЕРДИТИ</button>` : ''}
-                    <button onclick="deleteBooking('${date}')" style="background: none; border: 1px solid #444; color: #888; padding: 5px 10px; cursor: pointer;">ВИДАЛИТИ</button>
-                </div>
-            `;
-            listCont.appendChild(item);
-        });
-    });
-}
-
-window.confirmBooking = function(date) {
-    if(confirm(`Підтвердити ${date}?`)) {
-        database.ref('bookings/' + date).update({ status: "confirmed" });
-    }
-};
-
-window.deleteBooking = function(date) {
-    if (confirm(`Видалити ${date}?`)) {
-        database.ref('bookings/' + date).remove().then(() => renderCalendar());
-    }
-};
-
-window.setDayOff = function() {
-    const date = document.getElementById('admin-day-off').value;
-    if (!date) return alert("Оберіть дату");
-    database.ref('bookings/' + date).set({
-        clientName: "⛔ ВИХІДНИЙ",
-        clientContact: "system",
-        status: "confirmed",
-        timestamp: Date.now()
-    }).then(() => renderCalendar());
-};
 
 // --- СТАРТ ТА АНІМАЦІЇ ---
 function checkReveal() {
@@ -277,10 +269,19 @@ function checkReveal() {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadPhotos();
-    if (window.location.hash === '#admin') adminAuth();
-    window.addEventListener('hashchange', () => { if (window.location.hash === '#admin') adminAuth(); });
+    
     const modal = document.getElementById('image-modal');
-    if (modal) modal.onclick = () => modal.style.display = "none";
+    const closeBtn = document.querySelector('.close-modal');
+
+    if (modal) {
+        // Закриття при кліку на фон
+        modal.onclick = (e) => {
+            if (e.target === modal || e.target.classList.contains('close-modal')) {
+                modal.style.display = "none";
+                document.body.style.overflow = "auto"; // Повертаємо прокрутку
+            }
+        };
+    }
 });
 
 window.addEventListener('scroll', checkReveal);
