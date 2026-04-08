@@ -399,3 +399,32 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--neon-pink);
 }
+
+/* Контейнер для календаря */
+#book-date-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Виправляємо відображення самого вікна Flatpickr */
+.flatpickr-calendar {
+    background: #111 !important;
+    border: 1px solid var(--neon-pink) !important;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.2) !important;
+    z-index: 9999 !important;
+}
+
+/* Стиль для заблокованих дат */
+.booked-day {
+    color: #444 !important;
+    text-decoration: line-through;
+    background: transparent !important;
+    cursor: not-allowed !important;
+}
+
+/* Колір вибраної дати */
+.flatpickr-day.selected {
+    background: var(--neon-pink) !important;
+    border-color: var(--neon-pink) !important;
+    color: black !important;
+}
