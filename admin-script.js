@@ -1,4 +1,4 @@
-// 1. КОНФІГУРАЦІЯ FIREBASE (така сама, як у script.js)
+// Конфігурація (залишається твоя)
 const firebaseConfig = {
     apiKey: "AIzaSyBU7yr7SRj8JEvDHmY4w7SSXIX8zjgocCg",
     authDomain: "goratattokrop.firebaseapp.com",
@@ -9,20 +9,52 @@ const firebaseConfig = {
     appId: "1:921888337663:web:06a6fa71a114c35a4326ca"
 };
 
+// Ініціалізація
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
+const auth = firebase.auth();
 
-// 2. ПЕРЕВІРКА ПАРОЛЯ
-function checkAdminPass() {
+// --- ФУНКЦІЯ ВХОДУ ---
+window.loginAdmin = function() {
+    const email = document.getElementById('admin-email').value;
     const pass = document.getElementById('admin-pass').value;
-    if (pass === "0000") { // Ваш пароль
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('admin-content').style.display = 'block';
-        loadAdminData(); // Запускаємо завантаження даних
+
+    if (!email || !pass) return alert("Введіть пошту та пароль");
+
+    auth.signInWithEmailAndPassword(email, pass)
+        .then(() => {
+            console.log("Успішний вхід!");
+            // Тут нічого переключати не треба, спрацює onAuthStateChanged нижче
+        })
+        .catch((error) => {
+            alert("Помилка: " + error.message);
+        });
+};
+
+// --- ГОЛОВНИЙ СЛУХАЧ СТАТУСУ ---
+// Ця функція перевіряє, залогінені ви чи ні, щоразу при завантаженні сторінки
+auth.onAuthStateChanged((user) => {
+    const loginScreen = document.getElementById('login-screen');
+    const adminContent = document.getElementById('admin-content');
+
+    if (user) {
+        // Якщо залогінені: показуємо адмінку, ховаємо вхід
+        loginScreen.style.display = 'none';
+        adminContent.style.display = 'block';
+        loadAdminData(); // Завантажуємо записи
     } else {
-        alert("Невірний пароль!");
+        // Якщо ні: показуємо тільки вікно входу
+        loginScreen.style.display = 'flex';
+        adminContent.style.display = 'none';
     }
-}
+});
+
+// --- ВИХІД ---
+window.logoutAdmin = function() {
+    auth.signOut();
+};
+
+// Функція завантаження даних (loadAdminData) та інші залишаються як були раніше
 
 // 3. ЗАВАНТАЖЕННЯ ЗАПИСІВ З БАЗИ
 function loadAdminData() {
