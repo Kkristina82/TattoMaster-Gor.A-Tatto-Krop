@@ -307,23 +307,22 @@ body {
 }
 
 /* --- КОНТАКТИ (Виправлення сітки) --- */
-.contact-container {
-    max-width: 600px;
-    margin: 0 auto;
-    width: 100%;
+.contact-container { max-width: 400px; margin: 0 auto; padding: 20px; }
+.contact-grid { display: flex; flex-direction: column; gap: 15px; }
+.btn-contact {
+    display: flex; align-items: center; justify-content: center; gap: 12px; padding: 18px; 
+    border: 1px solid var(--neon-pink); color: #fff; text-decoration: none; 
+    font-family: 'Oswald', sans-serif; font-size: 1.1rem; letter-spacing: 2px; transition: 0.4s; background: rgba(255, 0, 255, 0.05);
 }
+.btn-contact:hover { background: var(--neon-pink); color: #000; box-shadow: 0 0 25px var(--neon-pink); transform: translateY(-3px); }
+.btn-phone { border-color: #fff; background: transparent; margin-top: 10px; }
+.btn-phone:hover { background: #fff; box-shadow: 0 0 25px #fff; color: #000; }
 
-.contact-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Дві колонки для ПК */
-    gap: 20px;
-}
+.map-button-wrapper { text-align: center; margin-top: 10px; }
+.btn-maps { border-color: var(--neon-red); background: rgba(207, 0, 0, 0.05); }
+.btn-maps:hover { background: var(--neon-red); box-shadow: 0 0 25px var(--neon-red); color: #fff; }
+.map-hint { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; font-family: 'Montserrat', sans-serif; }
 
-/* Щоб кнопки розтягувались на всю ширину своєї колонки */
-.contact-grid .btn-contact {
-    display: block;
-    width: 100%;
-}
 
 /* Вирівнювання кнопки карти та підказки */
 .map-button-wrapper {
@@ -367,22 +366,34 @@ body {
 
 /* Стилізація модального вікна для перегляду фото */
 .modal {
-    display: none;
+    display: none; /* Спочатку приховано */
     position: fixed;
-    z-index: 2000;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999; /* Максимальний пріоритет */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(5px);
+    cursor: pointer;
 }
 
 .modal-content {
     max-width: 90%;
     max-height: 90%;
+    object-fit: contain;
     border: 2px solid var(--neon-pink);
-    box-shadow: 0 0 30px var(--neon-pink);
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 /* Гарний скроллбар у стилі сайту */
