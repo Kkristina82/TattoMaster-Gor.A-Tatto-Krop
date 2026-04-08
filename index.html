@@ -171,7 +171,7 @@
     </div>
 
     <!-- Контакти -->
-    <div id="contact" class="tab-content">
+     <div id="contact" class="tab-content">
         <h2 class="section-title">КОНТАКТИ</h2>
         <div class="contact-container">
             <div class="contact-grid">
@@ -199,22 +199,5 @@
     <!-- Твій скрипт -->
     <script src="script.js"></script>
 
-    <!-- Адмін-панель -->
-    <div id="admin-panel" class="tab-content" style="display: none; padding-top: 100px;">
-        <h2 class="section-title" style="color: var(--neon-red);">CONTROL PANEL</h2>
-        <div class="care-guide-v2" style="max-width: 600px; margin: 0 auto; background: rgba(10,10,10,0.9); padding: 20px; border: 1px solid #222;">
-            <div id="admin-interface">
-                <h4 style="color: var(--neon-pink); border-bottom: 1px solid #222; padding-bottom: 10px;">СПИСОК ЗАПИСІВ</h4>
-                <div id="admin-bookings-list" style="text-align: left; margin-bottom: 30px; max-height: 400px; overflow-y: auto;"></div>
-                
-                <h4 style="color: var(--neon-red); border-bottom: 1px solid #222; padding-bottom: 10px;">КЕРУВАННЯ ГРАФІКОМ</h4>
-                <p style="font-size: 0.8rem; color: #888;">Оберіть дату, щоб зробити її вихідним:</p>
-                <input type="date" id="admin-day-off" class="booking-input" style="margin-bottom: 10px;">
-                <button onclick="setDayOff()" class="btn-course" style="width: 100%; border-color: var(--neon-red); color: var(--neon-red);">ЗАБЛОКУВАТИ ДАТУ</button>
-                
-                <button onclick="showTab('home')" class="btn-contact" style="margin-top: 30px; width: 100%; opacity: 0.5;">ВИЙТИ З АДМІНКИ</button>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
