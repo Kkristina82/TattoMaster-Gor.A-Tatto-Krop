@@ -49,23 +49,31 @@ function loadPhotos() {
 
 // --- НАВІГАЦІЯ ---
 window.showTab = function(tabId) {
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-        tab.classList.remove('active');
-        if (tab.id === 'admin-panel') tab.style.display = 'none';
-    });
-    
-    const activeTab = document.getElementById(tabId);
-    if (activeTab) {
-        activeTab.classList.add('active');
-        if (tabId === 'admin-panel') activeTab.style.display = 'block';
-    }
+    try {
+        const tabs = document.querySelectorAll('.tab-content');
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.id === 'admin-panel') tab.style.display = 'none';
+        });
+        
+        const activeTab = document.getElementById(tabId);
+        if (activeTab) {
+            activeTab.classList.add('active');
+            if (tabId === 'admin-panel') activeTab.style.display = 'block';
+        }
 
-    if (tabId === 'booking') renderCalendar();
-    if (tabId === 'admin-panel') loadAdminData();
-    
-    window.scrollTo(0, 0);
-    setTimeout(checkReveal, 100);
+        // Викликаємо календар тільки якщо перейшли на вкладку запису
+        if (tabId === 'booking') {
+            renderCalendar();
+        }
+        
+        if (tabId === 'admin-panel') loadAdminData();
+        
+        window.scrollTo(0, 0);
+        if (typeof checkReveal === "function") setTimeout(checkReveal, 100);
+    } catch (e) {
+        console.error("Помилка навігації:", e);
+    }
 }
 
 // --- КАЛЕНДАР ---
@@ -77,37 +85,46 @@ function formatDateLocal(date) {
 }
 
 function renderCalendar() {
+    const dateInput = document.querySelector("#book-date");
+    const container = document.querySelector("#book-date-container");
+
+    if (!dateInput || !container) return;
+
+    // Спробуємо отримати дані з Firebase
     database.ref('bookings').once('value').then((snapshot) => {
         const allData = snapshot.val() || {};
         
-        // Блокуємо підтверджені та вихідні
         const lockedDates = Object.keys(allData).filter(date => {
             return allData[date].status === "confirmed" || 
                    (allData[date].clientName && allData[date].clientName.includes("ВИХІДНИЙ"));
         });
 
-        const allBookedDates = Object.keys(allData);
+        // Знищуємо старий календар перед створенням нового
+        if (window.fp && typeof window.fp.destroy === "function") {
+            window.fp.destroy();
+        }
 
-        if (fp) fp.destroy();
-
-        fp = flatpickr("#book-date", {
+        // Ініціалізація з перевіркою мови
+        window.fp = flatpickr(dateInput, {
             minDate: "today",
             static: true, 
-            appendTo: document.getElementById('book-date-container'), 
+            appendTo: container, 
             dateFormat: "Y-m-d",
-            "locale": "uk",
-            disable: lockedDates, 
+            "locale": "uk", 
+            disable: lockedDates,
             onDayCreate: function(dObj, dStr, fp, dayElem) {
-                if (dayElem.dateObj) {
+                if (dayElem.dateObj && typeof formatDateLocal === "function") {
                     const dateStr = formatDateLocal(dayElem.dateObj);
                     if (lockedDates.includes(dateStr)) {
                         dayElem.classList.add("booked-day");
-                    } else if (allBookedDates.includes(dateStr)) {
-                        dayElem.style.borderBottom = "2px dashed var(--neon-pink)";
                     }
                 }
             }
         });
+    }).catch(err => {
+        // Якщо база не відповіла, все одно показуємо порожній календар, щоб сайт не "лежав"
+        window.fp = flatpickr(dateInput, { minDate: "today", "locale": "uk" });
+        console.error("Firebase error:", err);
     });
 }
 
